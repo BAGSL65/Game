@@ -1,0 +1,42 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "sfml-debug",
+            "command": "E:\\Environments\\MinGW\\mingw32\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}/src/textureLoader.cpp",
+                "${workspaceFolder}/src/mapLoader.cpp",
+                "${workspaceFolder}/src/player.cpp",
+                "${workspaceFolder}/src/box_game.cpp",
+                "-o",
+                "${workspaceFolder}/bin/debug/pushBox.exe",
+                "-I",
+                "${workspaceFolder}/include/debug",
+                "-I",
+                "${workspaceFolder}/include",
+                "-L",
+                "${workspaceFolder}/lib/debug",
+                "-lsfml-graphics-d",
+                "-lsfml-window-d",
+                "-lsfml-system-d",
+                "-lsfml-audio-d",
+                "-lsfml-network-d"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "编译器: E:\\Environments\\MinGW\\mingw32\\bin\\g++.exe"
+        }
+    ]
+}
