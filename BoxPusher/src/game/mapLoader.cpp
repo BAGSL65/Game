@@ -4,7 +4,7 @@ std::vector<std::vector<int>> loadFromCSV(const std::string& filename) {
     std::ifstream file(filename);
     
     if (!file.is_open()) {
-        throw std::runtime_error("无法打开文件: " + filename);
+        throw MapLoadException("Failed to open file: " + filename);
     }
     
     std::string line;

@@ -1,22 +1,28 @@
 #include <SFML/Graphics.hpp>
 #include "textureLoader.h"
+#include <fstream>
 
-const char * path_prefix = "./resources/textures/";
+const char * path_prefix = "../../resources/textures/";
 sf::Texture load(const char * path){
     char * path_full = new char[strlen(path_prefix) + strlen(path) + 1];
     path_full = strcpy(path_full, path_prefix);
     path_full = strcat(path_full, path);
+    std::ifstream file(path_full);
     sf::Texture t;
-    if (!t.loadFromFile(path_full)) {
+    if (!file.is_open())
+    {
+        throw LoadException("Failed to open texture file");
+    }
+    if(!t.loadFromFile(path_full)) 
+    {
         // 错误处理
         throw LoadException("Failed to load texture");
     }
-    free(path_full);
+    delete [] path_full;
     return t;
 }
-int load_texture(std::unordered_map<TextureName,sf::Texture>& texture_map) {
+void load_texture(std::unordered_map<TextureName,sf::Texture>& texture_map) {
 
-    try{
         // wall-block
         sf::Texture wall_block = load("Wall_Inside.png");
         texture_map[TextureName::Wall_Block] = wall_block;
@@ -60,10 +66,5 @@ int load_texture(std::unordered_map<TextureName,sf::Texture>& texture_map) {
         // box
         sf::Texture box = load("Box.png");
         texture_map[TextureName::Box] = box;
-        return 0;
-    }catch(LoadException& e){
-        std::cout<<e.what()<<std::endl;
-        return 1;
-    }
     
 }

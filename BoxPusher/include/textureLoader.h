@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include <string.h>
-#include "textureName.h"
+#include "textureNameEnum.h"
 
 // 最基本的自定义异常
 class LoadException : public std::exception {
@@ -23,5 +23,5 @@ private:
     std::string msg_;
 };
 
-int load_texture(std::unordered_map<TextureName,sf::Texture>& texture_map);
+void load_texture(std::unordered_map<TextureName,sf::Texture>& texture_map);
 #endif

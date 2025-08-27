@@ -11,7 +11,7 @@
       "program": "${workspaceFolder}/bin/debug/pushBox.exe", // 必须与 tasks.json 的输出一致
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/bin/debug/",
       "environment": [],
       "externalConsole": false, // 如果你想在新控制台打开，改为 true
       "MIMode": "gdb",

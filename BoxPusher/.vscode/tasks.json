@@ -7,11 +7,9 @@
             "command": "E:\\Environments\\MinGW\\mingw32\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
+                "-mwindows",
                 "-g",
-                "${workspaceFolder}/src/textureLoader.cpp",
-                "${workspaceFolder}/src/mapLoader.cpp",
-                "${workspaceFolder}/src/player.cpp",
-                "${workspaceFolder}/src/box_game.cpp",
+                "${workspaceFolder}/src/game/*",
                 "-o",
                 "${workspaceFolder}/bin/debug/pushBox.exe",
                 "-I",
