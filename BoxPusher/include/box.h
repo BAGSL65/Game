@@ -2,18 +2,26 @@
 #define BOX_H
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <unordered_map>
+#include "water.h"
+#include "common_tool.h"
 class Box {
     public:
-        bool sinked = false;
+        bool sunk = false;
         float size = 64.0f;
         sf::FloatRect getFloatRect(){return sprite.getGlobalBounds();};
-        sf::Vector2f position;
         sf::Sprite sprite;
-        Box(sf::Sprite sprite,sf::Vector2f position,float size) : 
-        sprite(sprite),position(position),size(size) {};
+        Box(sf::Sprite sprite,float size) : 
+        sprite(sprite),size(size) {};
 
 
-        void getPushed(sf::Vector2i direction,float BlockSize);
+        bool getPushed
+        (
+            sf::Vector2i direction,
+            std::unordered_map<float,std::shared_ptr<Water>> water_map,
+            const std::vector<sf::FloatRect>& hitboxList,
+            sf::Vector2f& pushed_pos
+        );
         
 };
 #endif

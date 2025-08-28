@@ -1,8 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <SFML/Graphics.hpp>
-#include "moveStateEnum.h"
 #include <vector>
+#include "moveStateEnum.h"
+#include "paras.h"
 
 class Player {
 
@@ -12,11 +13,10 @@ public:
     // float speed = 150.f;
     float step = 64.f;
     sf::Vector2i direction={0,0};
-    sf::Vector2f position;
     sf::Sprite sprite;
-    Player(sf::Sprite sprite,sf::Vector2f position) : sprite(sprite),position(position) {};
-    void move(sf::Vector2i movement,const std::vector<sf::FloatRect>& walls);
-    sf::Vector2f getBoxAt(float BlockSize);
+    Player(sf::Sprite sprite) : sprite(sprite) {};
+    void move(sf::Vector2i movement,const std::vector<sf::FloatRect>& hitboxList);
+    sf::Vector2f getBoxAt();
     sf::Vector2i getDirection(){return direction;};
 };
 #endif

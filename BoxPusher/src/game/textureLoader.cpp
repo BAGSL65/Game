@@ -1,12 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "textureLoader.h"
 #include <fstream>
-
-const char * path_prefix = "../../resources/textures/";
-sf::Texture load(const char * path){
-    char * path_full = new char[strlen(path_prefix) + strlen(path) + 1];
-    path_full = strcpy(path_full, path_prefix);
-    path_full = strcat(path_full, path);
+#include "paras.h"
+sf::Texture load(const char * filename){
+    char * path_full = new char[strlen(texture_path) + strlen(filename) + 1];
+    path_full = strcpy(path_full, texture_path);
+    path_full = strcat(path_full, filename);
     std::ifstream file(path_full);
     sf::Texture t;
     if (!file.is_open())
