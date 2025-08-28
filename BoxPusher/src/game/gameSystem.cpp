@@ -1,6 +1,4 @@
 #include "gameSystem.h"
-
-const char* log_path = "../../log/log.txt";
 Logger logger(log_path);
 
 std::vector<std::vector<sf::Sprite>> sBlockList2d;

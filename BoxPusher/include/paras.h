@@ -10,7 +10,8 @@ extern const float p_scale;
 extern const float box_scale;
 extern const unsigned int player_ini_pos_x;
 extern const unsigned int player_ini_pos_y;
+
 extern const char * mapdata_path;
 extern const char * texture_path;
-
+extern const char* log_path;
 #endif

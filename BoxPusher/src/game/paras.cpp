@@ -9,5 +9,12 @@ const float p_scale = 0.2f;
 const float box_scale = 0.2f;
 const unsigned int player_ini_pos_x = 1;
 const unsigned int player_ini_pos_y = 2;
-const char * mapdata_path = "../../resources/maps/level001.csv";
-const char * texture_path = "../../resources/textures/";
+#ifdef RELEASE_BUILD
+    const char * texture_path = "./resources/textures/";
+    const char * mapdata_path = "./resources/maps/level001.csv";
+    const char * log_path = "./log/log.txt";
+#else    
+    const char * texture_path = "../../resources/textures/";
+    const char * mapdata_path = "../../resources/maps/level001.csv";
+    const char * log_path = "../../log/log.txt";
+#endif

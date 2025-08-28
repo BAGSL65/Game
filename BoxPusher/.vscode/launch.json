@@ -23,7 +23,7 @@
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "sfml-debug" // 必须与 tasks.json 的 label 一致！
+      "preLaunchTask": "debug" // 必须与 tasks.json 的 label 一致！
     }
   ]
 }

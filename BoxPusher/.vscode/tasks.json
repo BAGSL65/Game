@@ -3,7 +3,7 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "sfml-debug",
+            "label": "debug",
             "command": "E:\\Environments\\MinGW\\mingw32\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
@@ -33,6 +33,47 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "detail": "编译器: E:\\Environments\\MinGW\\mingw32\\bin\\g++.exe"
+        },
+        {
+            "type": "shell",
+            "label": "package",
+            "command": "E:\\Environments\\MinGW\\mingw32\\bin\\g++.exe",
+            "args": [
+                "-DRELEASE_BUILD",
+                "-DSFML_STATIC", // 静态链接
+                "-DNDEBUG", // 禁用断言
+                "-O2", // 标准优化
+                "-fdiagnostics-color=always", // 彩色错误信息
+                "-mwindows", // 禁用控制台窗口
+                "-g",
+                "${workspaceFolder}/src/game/*",
+                "-o",
+                "${workspaceFolder}/bin/release/pushBox.exe",
+                "-I",
+                "${workspaceFolder}/include/release",
+                "-I",
+                "${workspaceFolder}/include",
+                "-L",
+                "${workspaceFolder}/lib/release",
+                "-lsfml-graphics-s",
+                "-lsfml-window-s",
+                "-lsfml-system-s",
+                "-lsfml-audio-s",
+                "-lsfml-network-s",
+                "-lopengl32",      // 添加 OpenGL 库
+                "-lwinmm",         // 添加 Windows 多媒体库
+                "-lgdi32",         // 添加 GDI 库
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build"
             },
             "detail": "编译器: E:\\Environments\\MinGW\\mingw32\\bin\\g++.exe"
         }
