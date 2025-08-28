@@ -65,5 +65,9 @@ void load_texture(std::unordered_map<TextureName,sf::Texture>& texture_map) {
         // box
         sf::Texture box = load("Box.png");
         texture_map[TextureName::Box] = box;
-    
+        // Pupu
+        sf::Texture pupu = load("Pupu.png");
+        texture_map[TextureName::Pupu] = pupu;
+        // Exit
+        texture_map[TextureName::Exit] = grass;
 }

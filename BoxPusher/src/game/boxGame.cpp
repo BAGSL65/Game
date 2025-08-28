@@ -41,7 +41,7 @@ int main()
                 (*p_player).move({1,0}, hitBoxList);
             // press r to reset game
             if (event->is<sf::Event::KeyPressed>()&&event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::R) {
-                if(resetGame()==-1){
+                if(resetGame() == -1){
                     logger.log("resetGame() failed");
                     return EXIT_FAILURE;
                 }

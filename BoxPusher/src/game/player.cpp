@@ -1,4 +1,5 @@
 #include "player.h"
+#include "gameSystem.h"
 void Player::move(sf::Vector2i movement,const std::vector<sf::FloatRect>& hitboxList) {
 
     if(moveState == MoveState::Idle){
@@ -27,11 +28,9 @@ void Player::move(sf::Vector2i movement,const std::vector<sf::FloatRect>& hitbox
             }
         }
 
-        
-
         hit_pos.position.x += horizontal_movement;
         hit_pos.position.y += vertical_movement;
-
+        // check if any collision happened
         bool collision = false;
         for (auto& hitbox : hitboxList) {
             if (hit_pos.findIntersection(hitbox)) {
@@ -44,6 +43,14 @@ void Player::move(sf::Vector2i movement,const std::vector<sf::FloatRect>& hitbox
             next_pos.x += horizontal_movement;
             next_pos.y += vertical_movement;
             sprite.setPosition(next_pos);
+
+            // check if player is touching exit
+            if (hit_pos.findIntersection(exit_hitbox)) {
+                if(levelPass()==EXIT_FAILURE){
+                    logger.log("Level Passed Failure");
+                    return;
+                }
+            }
         }
     }
 }

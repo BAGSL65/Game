@@ -17,6 +17,8 @@ std::unique_ptr<sf::Sprite> p_sprite;
 std::unique_ptr<Player> p_player;
 bool hitboxDirty = true;
 
+sf::FloatRect exit_hitbox;
+
 //load hitbox
 std::vector<sf::FloatRect> hitBoxList;
 
@@ -35,7 +37,7 @@ void init_player_loc(){
     p_player->sprite.setPosition({p_block_pos.x+origin_x*block_scale,p_block_pos.y+origin_y*block_scale});  
 }
 int init_player(){
-    playerTex = texture_map[TextureName::Wall_Block];
+    playerTex = texture_map[TextureName::Pupu];
     p_sprite = std::make_unique<sf::Sprite>(playerTex);
     init_player_sprite(); 
     p_player = std::make_unique<Player>(*p_sprite);
@@ -71,6 +73,7 @@ int load_map(){
 int init_map(){
     // Init Map
     int x=0,y=0;
+    bool has_exit = false;
     for (auto& row : mapData){
         std::vector<sf::Sprite> sBlockRow;
         x=0;
@@ -80,17 +83,18 @@ int init_map(){
 
             sprite.setScale({block_scale, block_scale});
             sprite.setPosition(posVec);
-            if(t >= 10)
+            if(TextureName(t) >= TextureName::Wall_Corner_Top_Left &&
+                TextureName(t) <= TextureName::Wall_Block) // if it is a wall
             {
                 sBlockBoundsList.push_back(sprite.getGlobalBounds());
             }
-            else if(t == 1)
+            else if(TextureName(t) == TextureName::Water) // if it is water
             {
                 auto water = std::make_shared<Water>(sprite,posVec,BlockSize);
                 waterMap[vecToFloat(posVec)] = water;
                 waterList.push_back(water);
             }
-            else if(t == 2)
+            else if(TextureName(t) == TextureName::Box) // if it is a box
             {
                 sprite.setTexture(texture_map[TextureName::Grass]);
 
@@ -107,6 +111,12 @@ int init_map(){
                 boxMap[vecToFloat(posVec)] = box;
                 boxList.push_back(box);
             }
+            if(TextureName(t) == TextureName::Exit)
+            {   
+                if(has_exit) throw MapLoadException("Multiple exit");
+                exit_hitbox = sprite.getGlobalBounds();
+                has_exit = true;
+            }
             sBlockRow.push_back(sprite);
             x++;
         }
@@ -118,10 +128,19 @@ int init_map(){
     return EXIT_SUCCESS;
 }
 int initGame(){
-    if (init_texture()==EXIT_FAILURE) return EXIT_FAILURE;
-    if (load_map()==EXIT_FAILURE) return EXIT_FAILURE;
-    if (init_map()==EXIT_FAILURE) return EXIT_FAILURE;
-    if (init_player()==EXIT_FAILURE) return EXIT_FAILURE;
+    try{
+        if (init_texture()==EXIT_FAILURE) return EXIT_FAILURE;
+        if (load_map()==EXIT_FAILURE) return EXIT_FAILURE;
+        if (init_map()==EXIT_FAILURE) return EXIT_FAILURE;
+        if (init_player()==EXIT_FAILURE) return EXIT_FAILURE;
+    } 
+    catch(const MapLoadException& e){
+        logger.log(e.what());
+    }
+    catch(...)
+    {
+        throw;
+    }
     return EXIT_SUCCESS;
 }
 
@@ -135,4 +154,9 @@ int resetGame(){
     if (init_map()==EXIT_FAILURE) return EXIT_FAILURE;
     init_player_loc();
     return EXIT_SUCCESS;
+}
+
+int levelPass()
+{
+    return resetGame();
 }

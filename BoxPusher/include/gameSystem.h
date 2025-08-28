@@ -30,7 +30,9 @@ extern std::unique_ptr<Player> p_player;
 //load hitbox
 extern std::vector<sf::FloatRect> hitBoxList;
 extern bool hitboxDirty;
-
+//Level Exit
+extern sf::FloatRect exit_hitbox;
 int initGame();
 int resetGame();
+int levelPass();
 #endif

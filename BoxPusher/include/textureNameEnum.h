@@ -3,11 +3,11 @@
 
 
 enum class TextureName {
-    
+    Exit=0,
     Water=1,
     Box=2,
     Grass=3,
-
+    Pupu=5,
     Wall_Corner_Top_Left=10,
     Wall_Corner_Top_Right=11,
     Wall_Corner_Bottom_Left=12,

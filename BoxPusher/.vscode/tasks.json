@@ -11,7 +11,7 @@
                 "-g",
                 "${workspaceFolder}/src/game/*",
                 "-o",
-                "${workspaceFolder}/bin/debug/pushBox.exe",
+                "${workspaceFolder}/bin/debug/BoxPusher.exe",
                 "-I",
                 "${workspaceFolder}/include/debug",
                 "-I",
@@ -49,8 +49,9 @@
                 "-mwindows", // 禁用控制台窗口
                 "-g",
                 "${workspaceFolder}/src/game/*",
+                "${workspaceFolder}/resources/icon/resources.o", // 链接资源文件(图标等)
                 "-o",
-                "${workspaceFolder}/bin/release/pushBox.exe",
+                "${workspaceFolder}/bin/release/BoxPusher.exe",
                 "-I",
                 "${workspaceFolder}/include/release",
                 "-I",
