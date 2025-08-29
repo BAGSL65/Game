@@ -1,6 +1,6 @@
 #include "gameSystem.h"
 Logger logger(log_path);
-GameState gameState = GameState::Loading;
+GameState gameState = GameState::StartMenu;
 
 std::vector<std::vector<sf::Sprite>> sBlockList2d;
 std::vector<sf::FloatRect> sBlockBoundsList;
@@ -19,6 +19,7 @@ std::unique_ptr<Player> p_player;
 bool hitboxDirty = true;
 
 sf::Font font;
+sf::Font title_font;
 
 sf::FloatRect exit_hitbox;
 
@@ -41,6 +42,10 @@ int init_font(){
     // 加载字体
     if(!font.openFromFile(font_path)){
         logger.log("font.openFromFile() failed");
+        return EXIT_FAILURE;
+    }
+    if(!title_font.openFromFile(title_font_path)){
+        logger.log("title_font.openFromFile() failed");
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

@@ -22,7 +22,8 @@
                 "-lsfml-window-d",
                 "-lsfml-system-d",
                 "-lsfml-audio-d",
-                "-lsfml-network-d"
+                "-lsfml-network-d",
+                "-limm32"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

@@ -35,6 +35,7 @@ extern bool hitboxDirty;
 //Level Exit
 extern sf::FloatRect exit_hitbox;
 extern sf::Font font;
+extern sf::Font title_font;
 int initLevel();
 int resetLevel();
 int levelPass();

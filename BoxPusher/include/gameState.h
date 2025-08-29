@@ -8,12 +8,8 @@ enum class GameState
     Playing=2,
     Paused=3,
     LevelPassing=4,
-    GameFinish=5
-
-};
-
-class GameProcessor
-{
+    Config=5,
+    GameFinish=6
 
 };
 
