@@ -1,6 +1,7 @@
 #ifndef GAME_ACTOR_H
 #define GAME_ACTOR_H
 
+#include "gameState.h"
 #include "box.h"
 #include "player.h"
 #include "water.h"
@@ -11,6 +12,7 @@
 #include "logger.h"
 
 extern Logger logger;
+extern GameState gameState;
 
 extern std::vector<std::vector<sf::Sprite>> sBlockList2d;
 extern std::vector<sf::FloatRect> sBlockBoundsList;
@@ -32,7 +34,9 @@ extern std::vector<sf::FloatRect> hitBoxList;
 extern bool hitboxDirty;
 //Level Exit
 extern sf::FloatRect exit_hitbox;
-int initGame();
-int resetGame();
+extern sf::Font font;
+int initLevel();
+int resetLevel();
 int levelPass();
+
 #endif

@@ -13,8 +13,10 @@ const unsigned int player_ini_pos_y = 2;
     const char * texture_path = "./resources/textures/";
     const char * mapdata_path = "./resources/maps/level001.csv";
     const char * log_path = "./log/log.txt";
+    const char* font_path = "./resources/font/chuchen.ttf";
 #else    
     const char * texture_path = "../../resources/textures/";
     const char * mapdata_path = "../../resources/maps/level001.csv";
     const char * log_path = "../../log/log.txt";
+    const char* font_path = "../../resources/font/chuchen.ttf";
 #endif

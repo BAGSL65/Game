@@ -1,5 +1,6 @@
 #include "gameSystem.h"
 Logger logger(log_path);
+GameState gameState = GameState::Loading;
 
 std::vector<std::vector<sf::Sprite>> sBlockList2d;
 std::vector<sf::FloatRect> sBlockBoundsList;
@@ -17,34 +18,12 @@ std::unique_ptr<sf::Sprite> p_sprite;
 std::unique_ptr<Player> p_player;
 bool hitboxDirty = true;
 
+sf::Font font;
+
 sf::FloatRect exit_hitbox;
 
 //load hitbox
 std::vector<sf::FloatRect> hitBoxList;
-
-void init_player_sprite(){
-    float origin_x = playerTex.getSize().x / 2.f;
-    float origin_y = playerTex.getSize().y / 2.f;
-    p_sprite->setOrigin({origin_x,origin_y}); // 设置中心为原点
-    p_sprite->setScale({p_scale,p_scale}); 
-}
-
-void init_player_loc(){
-    float origin_x = playerTex.getSize().x / 2.f;
-    float origin_y = playerTex.getSize().y / 2.f;
-    sf::Vector2u pos = {player_ini_pos_x,player_ini_pos_y};
-    sf::Vector2f p_block_pos = conv2uTo2f({pos.x*BlockSize,pos.y*BlockSize});
-    p_player->sprite.setPosition({p_block_pos.x+origin_x*block_scale,p_block_pos.y+origin_y*block_scale});  
-}
-int init_player(){
-    playerTex = texture_map[TextureName::Pupu];
-    p_sprite = std::make_unique<sf::Sprite>(playerTex);
-    init_player_sprite(); 
-    p_player = std::make_unique<Player>(*p_sprite);
-    init_player_loc(); 
-    return EXIT_SUCCESS;
-}
-
 int init_texture(){
     try
     {
@@ -53,6 +32,15 @@ int init_texture(){
     catch(LoadException& e)
     {
         logger.log(e.what());
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
+}
+
+int init_font(){
+    // 加载字体
+    if(!font.openFromFile(font_path)){
+        logger.log("font.openFromFile() failed");
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
@@ -127,9 +115,33 @@ int init_map(){
     hitboxDirty = true;
     return EXIT_SUCCESS;
 }
-int initGame(){
+void init_player_sprite(){
+    float origin_x = playerTex.getSize().x / 2.f;
+    float origin_y = playerTex.getSize().y / 2.f;
+    p_sprite->setOrigin({origin_x,origin_y}); // 设置中心为原点
+    p_sprite->setScale({p_scale,p_scale}); 
+}
+
+void init_player_loc(){
+    float origin_x = playerTex.getSize().x / 2.f;
+    float origin_y = playerTex.getSize().y / 2.f;
+    sf::Vector2u pos = {player_ini_pos_x,player_ini_pos_y};
+    sf::Vector2f p_block_pos = conv2uTo2f({pos.x*BlockSize,pos.y*BlockSize});
+    p_player->sprite.setPosition({p_block_pos.x+origin_x*block_scale,p_block_pos.y+origin_y*block_scale});  
+}
+int init_player(){
+    playerTex = texture_map[TextureName::Pupu];
+    p_sprite = std::make_unique<sf::Sprite>(playerTex);
+    init_player_sprite(); 
+    p_player = std::make_unique<Player>(*p_sprite);
+    init_player_loc(); 
+    return EXIT_SUCCESS;
+}
+
+int initLevel(){
     try{
         if (init_texture()==EXIT_FAILURE) return EXIT_FAILURE;
+        if (init_font()==EXIT_FAILURE) return EXIT_FAILURE;
         if (load_map()==EXIT_FAILURE) return EXIT_FAILURE;
         if (init_map()==EXIT_FAILURE) return EXIT_FAILURE;
         if (init_player()==EXIT_FAILURE) return EXIT_FAILURE;
@@ -143,8 +155,7 @@ int initGame(){
     }
     return EXIT_SUCCESS;
 }
-
-int resetGame(){
+int resetLevel(){
     boxList.clear();
     boxMap.clear();
     waterList.clear();
@@ -158,5 +169,6 @@ int resetGame(){
 
 int levelPass()
 {
-    return resetGame();
+    gameState = GameState::Loading;
+    return resetLevel();
 }
