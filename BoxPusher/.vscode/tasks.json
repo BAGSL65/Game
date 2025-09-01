@@ -59,14 +59,26 @@
                 "${workspaceFolder}/include",
                 "-L",
                 "${workspaceFolder}/lib/release",
-                "-lsfml-graphics-s",
+                // sfml dep
                 "-lsfml-window-s",
-                "-lsfml-system-s",
-                "-lsfml-audio-s",
                 "-lsfml-network-s",
+                "-lsfml-audio-s",
+                "-lsfml-graphics-s",
+                "-lsfml-system-s",
+                // system dep
                 "-lopengl32",      // 添加 OpenGL 库
                 "-lwinmm",         // 添加 Windows 多媒体库
                 "-lgdi32",         // 添加 GDI 库
+                "-limm32",          // IME 输入法支持
+                "-lws2_32",        // Windows Socket 库（网络支持）
+                // third party dep
+                "-lFLAC",          // 添加 FLAC 库
+                "-lvorbisfile",    // 添加 vorbisfile 库
+                "-lvorbisenc",     // 添加 Ogg Vorbis 编码库
+                "-lvorbis",        // 添加 Ogg Vorbis 库
+                "-logg",           // 添加 Ogg 库
+                "-lfreetype",    // 添加 freetype 库
+                
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

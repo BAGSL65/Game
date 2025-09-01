@@ -85,6 +85,12 @@ int loadingLevel(sf::RenderWindow& window){
     // Flush the window
     window.clear();
 
+    static sf::Clock big_clock;
+    if (big_clock.getElapsedTime() > sf::seconds(4.5)) { // 每500ms更新一次
+        gameState = GameState::Playing;
+        return EXIT_SUCCESS;
+    }
+
     while(auto event = window.pollEvent())
     {
         // can close the window to exit game
@@ -104,8 +110,8 @@ int loadingLevel(sf::RenderWindow& window){
     // 动态加载效果
     static int LoadingTick = 0;
     static sf::Clock clock;
-    if (clock.getElapsedTime().asMilliseconds() > 500) { // 每500ms更新一次
-        LoadingTick = (LoadingTick+1) % 9; // 0, 1, 2, 3, 4, 5, 6循环
+    if (clock.getElapsedTime().asMilliseconds() > 250) { // 每500ms更新一次
+        LoadingTick = (LoadingTick+1) % 9; // 0, 1, 2, 3, 4, 5...循环
         clock.restart();
     }
 
@@ -262,7 +268,26 @@ int mainMenu(sf::RenderWindow &window)
         quitText.setOrigin(quitText.getLocalBounds().getCenter());
         quitText.setPosition({static_cast<float>(weight)/2.f,static_cast<float>(height)/2.f + 100});
     }
-    
+    static sf::Clock clock;
+    static sf::Color tipcolor(255,255,255,75);
+    static sf::Text tipText(font);
+    if(!initialized)
+    {
+        tipText.setCharacterSize(15);
+        tipText.setFillColor(tipcolor);
+        tipText.setString("Up or Down to choose");
+        tipText.setOrigin({tipText.getLocalBounds().size.x,tipText.getLocalBounds().size.y});
+        tipText.setPosition({weight-10,height-10});
+    }
+    static sf::Text tipText2(font);
+    if(!initialized)
+    {
+        tipText2.setCharacterSize(15);
+        tipText2.setFillColor(tipcolor);
+        tipText2.setString("Enter to select");
+        tipText2.setOrigin({tipText2.getLocalBounds().size.x,tipText2.getLocalBounds().size.y});
+        tipText2.setPosition({weight-35,height-30});
+    }
     // Make the selectBox
     static sf::RectangleShape selectBox;
     if(!initialized)
@@ -299,6 +324,28 @@ int mainMenu(sf::RenderWindow &window)
     window.draw(configText);
     window.draw(quitText);
 
+    
+    static bool increase = true;
+    if (clock.getElapsedTime() > sf::milliseconds(50))
+    {
+        clock.restart();
+
+        int next_a = tipcolor.a;
+        next_a += increase ? 5 : -5;
+        if(next_a > 255){
+            increase = !increase;
+            next_a = 255;
+        }
+        if(next_a < 75){
+            increase = !increase;
+            next_a = 75;
+        }
+        tipcolor.a = next_a;
+        tipText.setFillColor(tipcolor);
+        tipText2.setFillColor(tipcolor);
+    }
+    window.draw(tipText);
+    window.draw(tipText2);
     window.display();
     
     return EXIT_SUCCESS;
