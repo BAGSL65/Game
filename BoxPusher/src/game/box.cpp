@@ -1,4 +1,5 @@
 #include "box.h"
+#include "gameSystem.h"
 bool Box::getPushed
     (
         sf::Vector2i direction,
@@ -30,9 +31,23 @@ bool Box::getPushed
         collision = false;
     }
     if(!collision){
+        // play sound push box
+        auto& sound = soundMap[SoundName::PushBox];
+        if(sound->getStatus() == sf::Sound::Status::Stopped){
+            sound->stop();
+        }
+        sound->play();
+        // caluculate next position
         sprite.setPosition(next_pos);
         pushed_pos = next_pos;
         return true;
+    }else{
+        // play sound push box cant move
+        auto& sound = soundMap[SoundName::PushBoxCantmove];
+        if(sound->getStatus() == sf::Sound::Status::Stopped){
+            sound->stop();
+        }
+        sound->play();
     }
     return false;
 }

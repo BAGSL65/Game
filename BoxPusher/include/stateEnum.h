@@ -1,6 +1,16 @@
 #ifndef TEXTURE_NAME_H
 #define TEXTURE_NAME_H
+enum class MoveState {
+    Idle
+};
 
+enum class SoundName{
+    EnterMenu,
+    Footstep,
+    PushBox,
+    PushBoxCantmove,
+    SwitchMenu
+};
 
 enum class TextureName {
     Exit=0,

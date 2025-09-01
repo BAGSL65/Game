@@ -21,11 +21,17 @@ bool hitboxDirty = true;
 sf::Font font;
 sf::Font title_font;
 
+sf::Music music;
+sf::SoundBuffer buffer;
+std::unordered_map<SoundName,sf::SoundBuffer> soundBufferMap;
+std::unordered_map<SoundName,std::shared_ptr<sf::Sound>> soundMap;
+
 sf::FloatRect exit_hitbox;
 
 //load hitbox
 std::vector<sf::FloatRect> hitBoxList;
-int init_texture(){
+int init_texture()
+{
     try
     {
         load_texture(texture_map);
@@ -38,7 +44,8 @@ int init_texture(){
     return EXIT_SUCCESS;
 }
 
-int init_font(){
+int init_font()
+{
     // 加载字体
     if(!font.openFromFile(font_path)){
         logger.log("font.openFromFile() failed");
@@ -50,7 +57,8 @@ int init_font(){
     }
     return EXIT_SUCCESS;
 }
-int load_map(){
+int load_map()
+{
     // Load mapData
     try
     {
@@ -63,7 +71,8 @@ int load_map(){
     }
     return EXIT_SUCCESS;
 }
-int init_map(){
+int init_map()
+{
     // Init Map
     int x=0,y=0;
     bool has_exit = false;
@@ -120,21 +129,24 @@ int init_map(){
     hitboxDirty = true;
     return EXIT_SUCCESS;
 }
-void init_player_sprite(){
+void init_player_sprite()
+{
     float origin_x = playerTex.getSize().x / 2.f;
     float origin_y = playerTex.getSize().y / 2.f;
     p_sprite->setOrigin({origin_x,origin_y}); // 设置中心为原点
     p_sprite->setScale({p_scale,p_scale}); 
 }
 
-void init_player_loc(){
+void init_player_loc()
+{
     float origin_x = playerTex.getSize().x / 2.f;
     float origin_y = playerTex.getSize().y / 2.f;
     sf::Vector2u pos = {player_ini_pos_x,player_ini_pos_y};
     sf::Vector2f p_block_pos = conv2uTo2f({pos.x*BlockSize,pos.y*BlockSize});
     p_player->sprite.setPosition({p_block_pos.x+origin_x*block_scale,p_block_pos.y+origin_y*block_scale});  
 }
-int init_player(){
+int init_player()
+{
     playerTex = texture_map[TextureName::Pupu];
     p_sprite = std::make_unique<sf::Sprite>(playerTex);
     init_player_sprite(); 
@@ -143,6 +155,18 @@ int init_player(){
     return EXIT_SUCCESS;
 }
 
+int initAudio()
+{
+    if (!music.openFromFile(music_path)) {
+        return EXIT_FAILURE;
+    }
+    music.setVolume(100);        // Volume (0-100)
+    music.setLooping(true);        // set looping
+    music.setPitch(1.0f); 
+
+    load_sound_map(soundBufferMap,soundMap);
+    return EXIT_SUCCESS;
+}
 int initLevel(){
     try{
         if (init_texture()==EXIT_FAILURE) return EXIT_FAILURE;

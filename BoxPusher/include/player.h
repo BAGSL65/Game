@@ -2,7 +2,7 @@
 #define PLAYER_H
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "moveStateEnum.h"
+#include "stateEnum.h"
 #include "paras.h"
 
 class Player {

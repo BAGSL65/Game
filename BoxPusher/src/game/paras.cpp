@@ -15,10 +15,14 @@ const unsigned int player_ini_pos_y = 2;
     const char * log_path = "./log/log.txt";
     const char* font_path = "./resources/font/chuchen.ttf";
     const char* title_font_path = "./resources/font/SuperVanilla.ttf";
+    const char* music_path = "./resources/music/QuietMemory.wav";
+    const char* sound_path = "./resources/sound/";
 #else    
     const char * texture_path = "../../resources/textures/";
     const char * mapdata_path = "../../resources/maps/level001.csv";
     const char * log_path = "../../log/log.txt";
     const char* font_path = "../../resources/font/chuchen.ttf";
     const char* title_font_path = "../../resources/font/SuperVanilla.ttf";
+    const char* music_path = "../../resources/music/QuietMemory.wav";
+    const char* sound_path = "../../resources/sound/";
 #endif

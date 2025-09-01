@@ -1,6 +1,8 @@
 #include "gameProcessor.h"
 
 int playingLevel(sf::RenderWindow& window){
+    if(music.getStatus() == sf::SoundSource::Status::Stopped ||
+        music.getStatus() == sf::SoundSource::Status::Paused) music.play();
     // Flush the window
     window.clear();
     if(hitboxDirty){
@@ -79,6 +81,7 @@ int playingLevel(sf::RenderWindow& window){
 }
 
 int loadingLevel(sf::RenderWindow& window){
+    if(music.getStatus() == sf::SoundSource::Status::Playing) music.pause();
     // Flush the window
     window.clear();
 
@@ -164,17 +167,33 @@ int mainMenu(sf::RenderWindow &window)
         (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::W ||
         event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Up))
         {
-            menuState = MenuState((static_cast<int>(menuState) - 1) % 3);
+            auto& sound = soundMap[SoundName::SwitchMenu];
+            if(sound->getStatus() == sf::Sound::Status::Stopped){
+                sound->stop();
+            }
+            sound->play();
+            // avoid -1 % 3 calculate
+            menuState = MenuState((static_cast<int>(menuState) + 3 - 1) % 3);
         }
         if (event->is<sf::Event::KeyPressed>() && 
         (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::S ||
         event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Down))
         {
+            auto& sound = soundMap[SoundName::SwitchMenu];
+            if(sound->getStatus() == sf::Sound::Status::Stopped){
+                sound->stop();
+            }
+            sound->play();
             menuState = MenuState((static_cast<int>(menuState) + 1) % 3);
         }
         if (event->is<sf::Event::KeyPressed>() &&
         event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Enter)
         {
+            auto& sound = soundMap[SoundName::EnterMenu];
+            if(sound->getStatus() == sf::Sound::Status::Stopped){
+                sound->stop();
+            }
+            sound->play();
             if(menuState == MenuState::START)
             {
                 gameState = GameState::Loading;

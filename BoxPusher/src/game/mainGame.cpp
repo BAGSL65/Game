@@ -3,6 +3,7 @@
     #include <imm.h>
 #endif
 #include "gameProcessor.h"
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode({MapLength*BlockSize,MapWidth*BlockSize}),L"推箱子",sf::Style::Default & ~sf::Style::Resize);
@@ -15,7 +16,10 @@ int main()
             ImmAssociateContext(hwnd, NULL);
         }
     #endif
-    
+    if(initAudio()==-1){
+        logger.log("init_audio() failed");
+        return EXIT_FAILURE;
+    }
     if(initLevel()==-1){
         logger.log("initLevel() failed");
         return EXIT_FAILURE;

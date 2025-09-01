@@ -44,6 +44,13 @@ void Player::move(sf::Vector2i movement,const std::vector<sf::FloatRect>& hitbox
             next_pos.y += vertical_movement;
             sprite.setPosition(next_pos);
 
+            // play footstep sound
+            auto& sound = soundMap[SoundName::Footstep];
+            if(sound->getStatus() == sf::Sound::Status::Stopped){
+                sound->stop();
+            }
+            sound->play();
+
             // check if player is touching exit
             if (hit_pos.findIntersection(exit_hitbox)) {
                 if(levelPass()==EXIT_FAILURE){

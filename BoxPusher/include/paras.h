@@ -16,5 +16,6 @@ extern const char * texture_path;
 extern const char* log_path;
 extern const char* font_path;
 extern const char* title_font_path;
-
+extern const char* music_path;
+extern const char* sound_path;
 #endif
