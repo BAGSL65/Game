@@ -1,9 +1,30 @@
-#ifndef TEXTURE_NAME_H
-#define TEXTURE_NAME_H
+#ifndef STATE_ENUM_H
+#define STATE_ENUM_H
 enum class MoveState {
     Idle
 };
+enum class LevelState {
+    LEVEL0 = 0,
+    LEVEL1,
+    LEVEL2,
+    LEVEL3,
+    LEVEL4,
+    LEVEL5,
+    LEVEL6,
+    LEVEL7,
+    LEVEL8
+};
+enum class GameState 
+{
+    StartMenu=0,
+    Loading=1,
+    Playing=2,
+    Paused=3,
+    LevelPassing=4,
+    Config=5,
+    GameFinish=6
 
+};
 enum class SoundName{
     EnterMenu,
     Footstep,
@@ -37,5 +58,4 @@ enum class TextureName {
 
     Wall_Block=40
 };
-
 #endif

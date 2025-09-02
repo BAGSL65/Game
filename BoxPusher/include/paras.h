@@ -8,8 +8,6 @@ extern const unsigned int MapWidth;
 extern const float block_scale;
 extern const float p_scale;
 extern const float box_scale;
-extern const unsigned int player_ini_pos_x;
-extern const unsigned int player_ini_pos_y;
 
 extern const char * mapdata_path;
 extern const char * texture_path;
@@ -18,4 +16,8 @@ extern const char* font_path;
 extern const char* title_font_path;
 extern const char* music_path;
 extern const char* sound_path;
+extern const char* map_suffix;
+// level tip
+extern const char* tip_text[];
+extern const int tip_text_scale[];
 #endif

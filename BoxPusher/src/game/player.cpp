@@ -1,5 +1,11 @@
 #include "player.h"
 #include "gameSystem.h"
+
+bool checkBorder(sf::Vector2f pos){
+    if(pos.x >= MapLength*BlockSize || pos.x < 0 || pos.y >= MapWidth*BlockSize || pos.y < 0)
+        return false;
+    return true;
+}
 void Player::move(sf::Vector2i movement,const std::vector<sf::FloatRect>& hitboxList) {
 
     if(moveState == MoveState::Idle){
@@ -42,6 +48,9 @@ void Player::move(sf::Vector2i movement,const std::vector<sf::FloatRect>& hitbox
             sf::Vector2f next_pos = sprite.getPosition();
             next_pos.x += horizontal_movement;
             next_pos.y += vertical_movement;
+
+            if(!checkBorder(next_pos)) return;
+
             sprite.setPosition(next_pos);
 
             // play footstep sound

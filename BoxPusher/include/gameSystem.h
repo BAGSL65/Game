@@ -3,7 +3,6 @@
 
 #include <SFML/Audio.hpp>
 
-#include "gameState.h"
 #include "box.h"
 #include "player.h"
 #include "water.h"
@@ -15,6 +14,9 @@
 
 extern Logger logger;
 extern GameState gameState;
+extern LevelState level;
+extern bool isLevelInited;
+extern bool isLoadTextInited;
 
 extern std::vector<std::vector<sf::Sprite>> sBlockList2d;
 extern std::vector<sf::FloatRect> sBlockBoundsList;
@@ -47,6 +49,7 @@ extern std::unordered_map<SoundName,std::shared_ptr<sf::Sound>> soundMap;
 int initLevel();
 int resetLevel();
 int levelPass();
-int initAudio();
+int init_audio();
+int init_font();
 
 #endif

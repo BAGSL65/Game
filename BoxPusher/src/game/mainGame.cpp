@@ -16,28 +16,41 @@ int main()
             ImmAssociateContext(hwnd, NULL);
         }
     #endif
-    if(initAudio()==-1){
+
+
+    if(init_audio()==-1){
         logger.log("init_audio() failed");
         return EXIT_FAILURE;
     }
-    if(initLevel()==-1){
-        logger.log("initLevel() failed");
+    if(init_font()==-1){
+        logger.log("init_font() failed");
         return EXIT_FAILURE;
     }
     // Render the window
     while (window.isOpen())
     {   
         if(gameState == GameState::Playing)
-        {
+        {   
+            if(!isLevelInited)
+            {
+                if(initLevel()==-1){
+                    logger.log("initLevel() failed");
+                    return EXIT_FAILURE;
+                }
+                isLevelInited = true;
+            }
             playingLevel(window);
         }
         else if (gameState == GameState::Loading)
         {
             loadingLevel(window);
-        }else if (gameState == GameState::StartMenu)
+        }
+        else if (gameState == GameState::StartMenu)
         {
             mainMenu(window);
-        }else if (gameState == GameState::Config){
+        }
+        else if (gameState == GameState::Config)
+        {
             config(window);
         }
     }

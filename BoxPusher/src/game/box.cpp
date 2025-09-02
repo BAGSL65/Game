@@ -28,6 +28,7 @@ bool Box::getPushed
     {
         sunk = true;
         water_map[vecToFloat(next_pos)]->boxed = true;
+        sprite.setColor(sf::Color(255,255,255,100));
         collision = false;
     }
     if(!collision){

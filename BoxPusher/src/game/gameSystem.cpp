@@ -1,6 +1,9 @@
 #include "gameSystem.h"
 Logger logger(log_path);
 GameState gameState = GameState::StartMenu;
+LevelState level = LevelState::LEVEL0;
+bool isLevelInited = false;
+bool isLoadTextInited = false;
 
 std::vector<std::vector<sf::Sprite>> sBlockList2d;
 std::vector<sf::FloatRect> sBlockBoundsList;
@@ -30,6 +33,17 @@ sf::FloatRect exit_hitbox;
 
 //load hitbox
 std::vector<sf::FloatRect> hitBoxList;
+
+sf::Vector2u player_pos;
+
+void clearMap(){
+    boxList.clear();
+    boxMap.clear();
+    waterList.clear();
+    waterMap.clear();
+    sBlockList2d.clear();
+    sBlockBoundsList.clear();
+}
 int init_texture()
 {
     try
@@ -62,7 +76,8 @@ int load_map()
     // Load mapData
     try
     {
-        mapData = loadFromCSV(mapdata_path);
+        std::string path = mapdata_path + std::to_string(static_cast<int>(level)) + map_suffix;
+        mapData = loadFromCSV(path);
     }
     catch (const MapLoadException& e)
     {
@@ -73,9 +88,12 @@ int load_map()
 }
 int init_map()
 {
-    // Init Map
+    // init map
     int x=0,y=0;
     bool has_exit = false;
+    // clear previous level data
+    clearMap();
+
     for (auto& row : mapData){
         std::vector<sf::Sprite> sBlockRow;
         x=0;
@@ -113,7 +131,12 @@ int init_map()
                 boxMap[vecToFloat(posVec)] = box;
                 boxList.push_back(box);
             }
-            if(TextureName(t) == TextureName::Exit)
+            else if(TextureName(t) == TextureName::Pupu) // if it is Pupu
+            {
+                sprite.setTexture(texture_map[TextureName::Grass]);
+                player_pos = {x*BlockSize,y*BlockSize};
+            }
+            else if(TextureName(t) == TextureName::Exit)
             {   
                 if(has_exit) throw MapLoadException("Multiple exit");
                 exit_hitbox = sprite.getGlobalBounds();
@@ -141,8 +164,7 @@ void init_player_loc()
 {
     float origin_x = playerTex.getSize().x / 2.f;
     float origin_y = playerTex.getSize().y / 2.f;
-    sf::Vector2u pos = {player_ini_pos_x,player_ini_pos_y};
-    sf::Vector2f p_block_pos = conv2uTo2f({pos.x*BlockSize,pos.y*BlockSize});
+    sf::Vector2f p_block_pos = conv2uTo2f({player_pos.x,player_pos.y});
     p_player->sprite.setPosition({p_block_pos.x+origin_x*block_scale,p_block_pos.y+origin_y*block_scale});  
 }
 int init_player()
@@ -155,7 +177,7 @@ int init_player()
     return EXIT_SUCCESS;
 }
 
-int initAudio()
+int init_audio()
 {
     if (!music.openFromFile(music_path)) {
         return EXIT_FAILURE;
@@ -170,7 +192,6 @@ int initAudio()
 int initLevel(){
     try{
         if (init_texture()==EXIT_FAILURE) return EXIT_FAILURE;
-        if (init_font()==EXIT_FAILURE) return EXIT_FAILURE;
         if (load_map()==EXIT_FAILURE) return EXIT_FAILURE;
         if (init_map()==EXIT_FAILURE) return EXIT_FAILURE;
         if (init_player()==EXIT_FAILURE) return EXIT_FAILURE;
@@ -185,12 +206,7 @@ int initLevel(){
     return EXIT_SUCCESS;
 }
 int resetLevel(){
-    boxList.clear();
-    boxMap.clear();
-    waterList.clear();
-    waterMap.clear();
-    sBlockList2d.clear();
-    sBlockBoundsList.clear();
+    clearMap();
     if (init_map()==EXIT_FAILURE) return EXIT_FAILURE;
     init_player_loc();
     return EXIT_SUCCESS;
@@ -199,5 +215,11 @@ int resetLevel(){
 int levelPass()
 {
     gameState = GameState::Loading;
-    return resetLevel();
+    if(level != LevelState::LEVEL8) 
+        level = static_cast<LevelState>(static_cast<int>(level)+1); 
+    else
+        return resetLevel();
+    isLevelInited = false;
+    isLoadTextInited = false;
+    return EXIT_SUCCESS;
 }

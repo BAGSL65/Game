@@ -1,10 +1,11 @@
 #include "gameProcessor.h"
 
 int playingLevel(sf::RenderWindow& window){
-    if(music.getStatus() == sf::SoundSource::Status::Stopped ||
-        music.getStatus() == sf::SoundSource::Status::Paused) music.play();
     // Flush the window
     window.clear();
+    if(music.getStatus() == sf::SoundSource::Status::Stopped ||
+        music.getStatus() == sf::SoundSource::Status::Paused) music.play();
+    
     if(hitboxDirty){
         hitBoxList = sBlockBoundsList;
         for(const auto& water: waterList){
@@ -28,13 +29,13 @@ int playingLevel(sf::RenderWindow& window){
             window.close();
         // press w a s d to move the player
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::W) 
-            (*p_player).move({0,1}, hitBoxList);
+            p_player->move({0,1}, hitBoxList);
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::S) 
-            (*p_player).move({0,-1}, hitBoxList);
+            p_player->move({0,-1}, hitBoxList);
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::A) 
-            (*p_player).move({-1,0}, hitBoxList);
+            p_player->move({-1,0}, hitBoxList);
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::D) 
-            (*p_player).move({1,0}, hitBoxList);
+            p_player->move({1,0}, hitBoxList);
         // press r to reset game
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::R) {
             if(resetLevel() == -1){
@@ -44,11 +45,11 @@ int playingLevel(sf::RenderWindow& window){
         }
         // press e to push the box
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::E) {
-            sf::Vector2f targetLoc=(*p_player).getBoxAt();
+            sf::Vector2f targetLoc=p_player->getBoxAt();
             if (boxMap.find(vecToFloat(targetLoc)) != boxMap.end()) { // 如果找到了
                 sf::Vector2f pushed_pos;
                 std::shared_ptr<Box> box = boxMap[vecToFloat(targetLoc)];
-                if(box->getPushed((*p_player).direction, waterMap,hitBoxList,pushed_pos)){
+                if(box->getPushed(p_player->direction, waterMap,hitBoxList,pushed_pos)){
                     boxMap.insert({vecToFloat(pushed_pos),box});
                     boxMap.erase(vecToFloat(targetLoc));
                     hitboxDirty = true;
@@ -60,9 +61,9 @@ int playingLevel(sf::RenderWindow& window){
     // Draw Map
     for(const auto& row : sBlockList2d)
     {
-        for(auto& obj : row)
+        for(auto& block : row)
         {
-            window.draw(obj);
+            window.draw(block);
         }
     }
     for(const auto& water: waterList)
@@ -74,7 +75,7 @@ int playingLevel(sf::RenderWindow& window){
         window.draw(box->sprite);
     }
     // Draw Player
-    window.draw((*p_player).sprite);
+    window.draw(p_player->sprite);
     window.display();
 
     return EXIT_SUCCESS;
@@ -84,12 +85,6 @@ int loadingLevel(sf::RenderWindow& window){
     if(music.getStatus() == sf::SoundSource::Status::Playing) music.pause();
     // Flush the window
     window.clear();
-
-    static sf::Clock big_clock;
-    if (big_clock.getElapsedTime() > sf::seconds(4.5)) { // 每500ms更新一次
-        gameState = GameState::Playing;
-        return EXIT_SUCCESS;
-    }
 
     while(auto event = window.pollEvent())
     {
@@ -102,30 +97,37 @@ int loadingLevel(sf::RenderWindow& window){
     }
     // 创建"Loading"文本
     static sf::Text loadingText(font);
-    loadingText.setFont(font);
-    loadingText.setCharacterSize(30);
-    loadingText.setFillColor(sf::Color::White);
-    loadingText.setStyle(sf::Text::Bold | sf::Text::Italic);
-
-    // 动态加载效果
+    if(!isLoadTextInited)
+    {
+        loadingText.setCharacterSize(30);
+        loadingText.setFillColor(sf::Color::White);
+        loadingText.setStyle(sf::Text::Bold | sf::Text::Italic);
+    }
+    // Using Clock to achieve dynamic animation
     static int LoadingTick = 0;
     static sf::Clock clock;
-    if (clock.getElapsedTime().asMilliseconds() > 250) { // 每500ms更新一次
-        LoadingTick = (LoadingTick+1) % 9; // 0, 1, 2, 3, 4, 5...循环
+    if (clock.getElapsedTime().asMilliseconds() > 250) { // update every 500ms
+        LoadingTick = (LoadingTick+1) % 9; // 0, 1, 2, 3, 4, 5...
         clock.restart();
+    }
+    static sf::Clock big_clock;
+    if (big_clock.getElapsedTime() > sf::seconds(4.5)) { 
+        gameState = GameState::Playing;
+        big_clock.restart();
+        clock.restart();
+        return EXIT_SUCCESS;
     }
 
     static std::string loadingString;
-    // Avoiding text shake, calculate and set the height in advance
+    
     loadingString.clear();
     loadingString = "Loading...";
     loadingText.setString(loadingString);
     sf::FloatRect textBounds = loadingText.getLocalBounds();
     int weight = window.getSize().x;
     int height = window.getSize().y;
-    float fixedX = static_cast<float>(weight) - 20 - textBounds.size.x;
+    // Avoiding text shake, calculate and set the height in advance
     float fixedY = static_cast<float>(height) - 20 - textBounds.size.y;
-    loadingText.setPosition({fixedX, fixedY});
 
     for (int i = 0; i <= LoadingTick; i++) {
         if (i == 0) loadingString.clear();
@@ -136,13 +138,48 @@ int loadingLevel(sf::RenderWindow& window){
         else if (i == 5) loadingString += "g";
         else loadingString += ".";
     }
-
     loadingText.setString(loadingString);
     textBounds = loadingText.getLocalBounds();
-    // recalculate the x position
-    fixedX = static_cast<float>(weight) - 20 - textBounds.size.x;
+    // calculate the x position
+    float fixedX = static_cast<float>(weight) - 20 - textBounds.size.x;
     loadingText.setPosition({fixedX, fixedY});
     window.draw(loadingText);
+
+    static sf::Text loadingTipText(font);
+    if(!isLoadTextInited)
+    {
+        loadingTipText.setCharacterSize(tip_text_scale[static_cast<int>(level)]);
+        loadingTipText.setFillColor(sf::Color::Yellow);
+        loadingTipText.setStyle(sf::Text::Bold | sf::Text::Italic);
+        loadingTipText.setString(tip_text[static_cast<int>(level)]);
+        loadingTipText.setOrigin(loadingTipText.getLocalBounds().getCenter());
+        loadingTipText.setPosition({weight/2.f, height/2.f});
+    }
+    if(level == LevelState::LEVEL7){
+        static sf::Text greenText(font);
+        static sf::Text redText(font);
+        if(!isLoadTextInited)
+        {
+            greenText.setCharacterSize(tip_text_scale[static_cast<int>(level)]);
+            greenText.setFillColor(sf::Color::Green);
+            greenText.setStyle(sf::Text::Bold | sf::Text::Italic);
+            greenText.setString("GREEN");
+            greenText.setOrigin(greenText.getLocalBounds().getCenter());
+            greenText.setPosition({weight/2.f-75, height/2.f-13});
+
+            redText.setCharacterSize(tip_text_scale[static_cast<int>(level)]);
+            redText.setFillColor(sf::Color::Red);
+            redText.setStyle(sf::Text::Bold | sf::Text::Italic);
+            redText.setString("RED");
+            redText.setOrigin(redText.getLocalBounds().getCenter());
+            redText.setPosition({weight/2.f+15, height/2.f+15});
+        }
+        window.draw(greenText);
+        window.draw(redText);
+    }
+    isLoadTextInited = true;
+    window.draw(loadingTipText);
+
     window.display();
     
     return EXIT_SUCCESS;
@@ -375,7 +412,6 @@ int config(sf::RenderWindow &window)
         configText.setOutlineColor(sf::Color::Black);
         configText.setOutlineThickness(5);
         configText.setString("Config");
-        // configText.setOrigin(configText.getLocalBounds().getCenter());
         configText.setPosition({20,20});
     }
     window.draw(configText);
