@@ -28,13 +28,21 @@ int playingLevel(sf::RenderWindow& window){
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Escape)
             window.close();
         // press w a s d to move the player
-        if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::W) 
+        if (event->is<sf::Event::KeyPressed>() && 
+        (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::W||
+         event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Up))
             p_player->move({0,1}, hitBoxList);
-        if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::S) 
+        if (event->is<sf::Event::KeyPressed>() && 
+        (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::S||
+         event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Down))
             p_player->move({0,-1}, hitBoxList);
-        if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::A) 
+        if (event->is<sf::Event::KeyPressed>() && 
+        (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::A||
+         event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Left))
             p_player->move({-1,0}, hitBoxList);
-        if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::D) 
+        if (event->is<sf::Event::KeyPressed>() && 
+        (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::D||
+         event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Right))
             p_player->move({1,0}, hitBoxList);
         // press r to reset game
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::R) {
@@ -50,8 +58,11 @@ int playingLevel(sf::RenderWindow& window){
                 sf::Vector2f pushed_pos;
                 std::shared_ptr<Box> box = boxMap[vecToFloat(targetLoc)];
                 if(box->getPushed(p_player->direction, waterMap,hitBoxList,pushed_pos)){
-                    boxMap.insert({vecToFloat(pushed_pos),box});
-                    boxMap.erase(vecToFloat(targetLoc));
+                    if(box->sunk) boxMap.erase(vecToFloat(targetLoc));
+                    else{
+                        boxMap.insert({vecToFloat(pushed_pos),box});
+                        boxMap.erase(vecToFloat(targetLoc));
+                    }
                     hitboxDirty = true;
                 }
             }
@@ -106,15 +117,21 @@ int loadingLevel(sf::RenderWindow& window){
     // Using Clock to achieve dynamic animation
     static int LoadingTick = 0;
     static sf::Clock clock;
-    if (clock.getElapsedTime().asMilliseconds() > 250) { // update every 500ms
+    static sf::Clock big_clock;
+    if (!isLoadTextInited)
+    {
+        LoadingTick = 0;
+        clock.restart();
+        big_clock.restart();
+    }
+    if (clock.getElapsedTime().asMilliseconds() > 250) { // update every 250ms
         LoadingTick = (LoadingTick+1) % 9; // 0, 1, 2, 3, 4, 5...
         clock.restart();
     }
-    static sf::Clock big_clock;
     if (big_clock.getElapsedTime() > sf::seconds(4.5)) { 
         gameState = GameState::Playing;
-        big_clock.restart();
-        clock.restart();
+        if(clock.isRunning())clock.stop();
+        if(big_clock.isRunning())big_clock.stop();
         return EXIT_SUCCESS;
     }
 

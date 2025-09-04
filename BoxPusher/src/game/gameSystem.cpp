@@ -1,7 +1,13 @@
 #include "gameSystem.h"
 Logger logger(log_path);
-GameState gameState = GameState::StartMenu;
-LevelState level = LevelState::LEVEL0;
+// Game
+// GameState gameState = GameState::StartMenu;
+// LevelState level = LevelState::LEVEL0;
+
+// Develop
+GameState gameState = GameState::Playing;
+LevelState level = LevelState::LEVEL2;
+
 bool isLevelInited = false;
 bool isLoadTextInited = false;
 
@@ -148,6 +154,8 @@ int init_map()
         sBlockList2d.push_back(sBlockRow);
         y++;
     }
+
+    if(!has_exit) throw MapLoadException("No exit");
     // reset hitbox
     hitboxDirty = true;
     return EXIT_SUCCESS;

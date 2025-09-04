@@ -1,6 +1,0 @@
-Failed to open file: ../../resources/maps/level_2.csv
-Failed to open file: ../../resources/maps/level_3.csv
-Failed to open file: ../../resources/maps/level_4.csv
-Failed to open file: ../../resources/maps/level_5.csv
-Failed to open file: ../../resources/maps/level_6.csv
-Failed to open file: ../../resources/maps/level_7.csv

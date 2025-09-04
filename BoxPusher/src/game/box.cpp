@@ -26,10 +26,12 @@ bool Box::getPushed
     next_pos.y+=direction.y*static_cast<int>(BlockSize);
     if(water_map.find(vecToFloat(next_pos))!=water_map.end())
     {
-        sunk = true;
-        water_map[vecToFloat(next_pos)]->boxed = true;
-        sprite.setColor(sf::Color(255,255,255,100));
-        collision = false;
+        if(!water_map[vecToFloat(next_pos)]->boxed){
+            sunk = true;
+            water_map[vecToFloat(next_pos)]->boxed = true;
+            sprite.setColor(sf::Color(255,255,255,100));
+            collision = false;
+        }
     }
     if(!collision){
         // play sound push box
