@@ -7,6 +7,8 @@ int playingLevel(sf::RenderWindow& window);
 
 int loadingLevel(sf::RenderWindow& window);
 
+int pausingLevel(sf::RenderWindow &window);
+
 int mainMenu(sf::RenderWindow& window);
 
 int config(sf::RenderWindow& window);

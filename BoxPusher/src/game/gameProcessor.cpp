@@ -26,7 +26,31 @@ int playingLevel(sf::RenderWindow& window){
             window.close();
         // press esc key to exit game
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Escape)
-            window.close();
+        {
+            gameState = GameState::Paused;
+            renderTexture.clear();
+            // Draw RenderTexture
+            for(const auto& row : sBlockList2d)
+            {
+                for(auto& block : row)
+                {
+                    renderTexture.draw(block);
+                }
+            }
+            for(const auto& water: waterList)
+            {
+                //if(water->boxed) {};
+            }
+            for(const auto& box : boxList)
+            {
+                renderTexture.draw(box->sprite);
+            }
+            // Draw Player
+            renderTexture.draw(p_player->sprite);
+            renderTexture.display();
+            return EXIT_SUCCESS;
+        }
+
         // press w a s d to move the player
         if (event->is<sf::Event::KeyPressed>() && 
         (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::W||
@@ -44,6 +68,8 @@ int playingLevel(sf::RenderWindow& window){
         (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::D||
          event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Right))
             p_player->move({1,0}, hitBoxList);
+
+
         // press r to reset game
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::R) {
             if(resetLevel() == -1){
@@ -51,6 +77,8 @@ int playingLevel(sf::RenderWindow& window){
                 return EXIT_FAILURE;
             }
         }
+
+
         // press e to push the box
         if (event->is<sf::Event::KeyPressed>() && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::E) {
             sf::Vector2f targetLoc=p_player->getBoxAt();
@@ -199,6 +227,36 @@ int loadingLevel(sf::RenderWindow& window){
 
     window.display();
     
+    return EXIT_SUCCESS;
+}
+int pausingLevel(sf::RenderWindow &window){
+    static sf::RectangleShape overlay;
+    static sf::Sprite background(renderTexture.getTexture());
+    static sf::Text pauseText(font);
+    if(!isPauseScreenInited){
+        overlay.setSize(conv2uTo2f(window.getSize()));
+        overlay.setFillColor(sf::Color(0,0,0,128));
+        isPauseScreenInited = true;
+        pauseText.setString("PAUSED");
+        pauseText.setCharacterSize(70);
+        pauseText.setFillColor(sf::Color::White);
+        pauseText.setOrigin(pauseText.getLocalBounds().getCenter());
+        pauseText.setPosition({window.getSize().x/2.f, 50});
+    }
+    while(auto event = window.pollEvent()){
+        if(event->is<sf::Event::KeyPressed>()&&event->getIf<sf::Event::KeyPressed>()->code==sf::Keyboard::Key::Escape){
+            gameState = GameState::Playing;
+            isPauseScreenInited = false;
+            return EXIT_SUCCESS;
+        }
+    }
+    
+    window.clear();
+    window.draw(background);
+    window.draw(overlay);
+    window.draw(pauseText);
+    window.display();
+
     return EXIT_SUCCESS;
 }
 

@@ -10,9 +10,11 @@ LevelState level = LevelState::LEVEL2;
 
 bool isLevelInited = false;
 bool isLoadTextInited = false;
+bool isPauseScreenInited = false;
 
 std::vector<std::vector<sf::Sprite>> sBlockList2d;
 std::vector<sf::FloatRect> sBlockBoundsList;
+
 // Using autoptr for safety
 std::vector<std::shared_ptr<Water>> waterList;
 std::vector<std::shared_ptr<Box>> boxList;
@@ -21,6 +23,7 @@ std::unordered_map<float, std::shared_ptr<Box>> boxMap;
 
 std::vector<std::vector<int>> mapData;
 std::unordered_map<TextureName, sf::Texture> texture_map;
+sf::RenderTexture renderTexture({MapLength*BlockSize,MapWidth*BlockSize});
 
 sf::Texture playerTex;
 std::unique_ptr<sf::Sprite> p_sprite;

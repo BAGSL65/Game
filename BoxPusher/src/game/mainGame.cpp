@@ -40,6 +40,8 @@ int main()
                 isLevelInited = true;
             }
             playingLevel(window);
+        }else if (gameState == GameState::Paused){
+            pausingLevel(window);
         }
         else if (gameState == GameState::Loading)
         {

@@ -17,6 +17,7 @@ extern GameState gameState;
 extern LevelState level;
 extern bool isLevelInited;
 extern bool isLoadTextInited;
+extern bool isPauseScreenInited;
 
 extern std::vector<std::vector<sf::Sprite>> sBlockList2d;
 extern std::vector<sf::FloatRect> sBlockBoundsList;
@@ -28,6 +29,7 @@ extern std::unordered_map<float, std::shared_ptr<Box>> boxMap;
 
 extern std::vector<std::vector<int>> mapData;
 extern std::unordered_map<TextureName, sf::Texture> texture_map;
+extern sf::RenderTexture renderTexture;
 
 extern sf::Texture playerTex;
 extern std::unique_ptr<sf::Sprite> p_sprite;
